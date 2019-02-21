@@ -1,0 +1,207 @@
+
+/* titlebar */
+
+.electronbar {
+	position: relative;
+	width: 100%;
+	height: 30px;
+	z-index: 1000;
+	line-height: 30px;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+
+	background-color: #333333;
+	font-size: 14px;
+	vertical-align: middle;
+	user-select: none;
+	-webkit-app-region: drag;
+}
+
+/* titlebar icon */
+
+.electronbar-favicon {
+	flex-grow: 0;
+	padding: 0 5px 0 5px;
+}
+
+.electronbar-favicon > img {
+	display: block;
+	position: relative;
+	height: 80%;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+/* title */
+
+.electronbar-title {
+	flex-grow: 1;
+	padding: 0 40px 0 40px;
+	text-align: right;
+}
+
+/* menu */
+
+.electronbar-menu {
+	flex-grow: 0;
+	display: inline-flex;
+	flex-direction: row;
+	-webkit-app-region: no-drag;
+}
+
+/* items */
+
+/* top item */
+
+.electronbar-top-menu-item {
+	position: relative;
+	display: inline-block;
+}
+
+.electronbar-top-menu-item-label {
+	display: inline-block;
+	height: 100%;
+	padding: 0 10px 0 10px;
+	line-height: 30px;
+}
+
+.electronbar-top-menu-item-children {
+	top: 30px;
+	left: 0px;
+}
+
+/* non-top level item */
+
+.electronbar-menu-item {
+	position: relative;
+	white-space: nowrap;
+}
+
+.electronbar-menu-item-label {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	line-height: 24px;
+	padding: 0 5px 0 5px;
+}
+
+.electronbar-menu-item-label-text {
+	display: inline;
+	text-align: left;
+}
+
+.electronbar-menu-item-label-expander {
+	font-size: 10px;
+}
+
+.electronbar-menu-item-label-accelerator {
+	display: inline;
+	text-align: right;
+	font-size: 12px;
+	color: #999999;
+}
+
+.electronbar-menu-item-children {
+	top: -10px;
+	left: calc(100% + 10px);
+}
+
+/* items common */
+
+.electronbar-top-menu-item,
+.electronbar-menu-item {
+	color: #FFFFFF;
+}
+
+.electronbar-top-menu-item.open,
+.electronbar-menu-item.open {
+	background-color: #444444;
+}
+
+.electronbar-top-menu-item.disabled,
+.electronbar-menu-item.disabled {
+	color: #999999;
+}
+
+.electronbar-top-menu-item:not(.disabled):hover,
+.electronbar-menu-item:not(.disabled):hover {
+	background-color: #444444;
+}
+
+.electronbar-top-menu-item-children,
+.electronbar-menu-item-children {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	background-color: #333333;
+	padding: 5px 10px 5px 10px;
+	box-shadow: 1px 2px 2px 2px rgba(0, 0, 0, .5);
+}
+
+.electronbar-menu-item-label-expander,
+.electronbar-menu-item-label-accelerator {
+	padding-left: 20px;
+}
+
+/* seperator */
+
+.electronbar-seperator > hr {
+	height: 1px;
+	margin: 5px 0 5px 0;
+	border: none;
+	background: none;
+	color: #999999;
+	background-color: #999999;
+}
+
+/* buttons */
+
+.electronbar-buttons {
+	display: flex;
+	flex-direction: row;
+	flex-grow: 0;
+	-webkit-app-region: no-drag;
+}
+
+.electronbar-button  {
+	position: relative;
+	font-size: 14px;
+	padding: 0 10px 0 10px;
+}
+
+/* close button */
+
+.electronbar-button-close:hover {
+	background-color: #AA0000;
+}
+
+.electronbar-button-minimize:hover,
+.electronbar-button-maximize:hover,
+.electronbar-button-unfullscreen:hover {
+	background-color: #444444;
+}
+
+/* icons */
+
+.electronbar-icon {
+	display: flex;
+	align-items: center;
+	height: 100%;
+	color: #CCCCCC;
+}
+
+.electronbar-icon > svg {
+	display: inline-block;
+	height: 1em;
+	overflow: visible;
+}
+
+.electronbar-icon-minimize,
+.electronbar-icon-maximize,
+.electronbar-icon-unfullscreen,
+.electronbar-icon-close {
+	font-size: 14px;
+	padding: 0 10px 0 10px;
+}

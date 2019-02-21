@@ -1,10 +1,12 @@
 /**
- * electronbar
+ * Electronbar
  *
- * A react title bar component for Electron.
+ * A react titlebar/menubar component and handler for Electron.
  *
  * Author: Jeff Seaman
- * Date: Feb 20, 2019
+ * Date: Feb 21, 2019
  */
  
- module.exports = {};
+ module.exports = {
+	Electronbar: require('lib/Electronbar')
+ };
