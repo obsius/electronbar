@@ -1,0 +1,28 @@
+{
+	"name": "electronbar",
+	"version": "0.0.0",
+	"description": "A react title bar componenet for Electron.",
+	"author": "Mark Pundsack",
+	"contributors": [
+		"Jeff Seaman <mr.jeffrey.seaman@gmail.com> (https://www.ngc6822.com)"
+	],
+	"license": "MIT"
+	"main": "index.js",
+	"scripts": {
+		"start": "node index.js"
+	},
+	"dependencies": {
+		"classnames": "^2.2.6",
+		"react": "^16.8.2"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/obsius/electronbar.git"
+	},
+	"keywords": [
+		"node",
+		"electron",
+		"titlebar",
+		"menubar"
+	]
+}
