@@ -9,7 +9,6 @@ Electronbar is a react component and handler for frameless Electron windows that
 This package has been made for Windows, although anyone wishing to modify this to match a Linux or Mac look and feel is encouraged to do so and contribute. The source is small, so it should be simple to make any necessary modifications.
 
 ## Screenshots
-https://ORESoftware/suman/master/images/suman.png
 ![screenshot1](https://raw.githubusercontent.com/obsius/electronbar/master/doc/1.png "Disabled Example")
 ![screenshot2](https://raw.githubusercontent.com/obsius/electronbar/master/doc/2.png "Enabled Example")
 ![screenshot3](https://raw.githubusercontent.com/obsius/electronbar/master/doc/3.gif "Moving Example")
