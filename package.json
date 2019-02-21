@@ -2,7 +2,7 @@
 	"name": "electronbar",
 	"version": "0.0.0",
 	"description": "A react title bar componenet for Electron.",
-	"author": "Mark Pundsack",
+	"author": "Jeff Seaman",
 	"contributors": [
 		"Jeff Seaman <mr.jeffrey.seaman@gmail.com> (https://www.ngc6822.com)"
 	],
