@@ -15,6 +15,7 @@
 		"plugins": [
 			"transform-runtime",
 			"transform-decorators-legacy",
+			"transform-react-jsx",
 			[
 				"babel-plugin-transform-builtin-extend",
 				{
@@ -42,6 +43,7 @@
 		"babel-plugin-root-import": "^6.1.0",
 		"babel-plugin-transform-builtin-extend": "^1.1.2",
 		"babel-plugin-transform-decorators-legacy": "^1.3.5",
+		"babel-plugin-transform-react-jsx": "^6.24.1",
 		"babel-plugin-transform-runtime": "^6.23.0",
 		"babel-preset-env": "^1.7.0",
 		"babel-preset-stage-2": "^6.24.1"
