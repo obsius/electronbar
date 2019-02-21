@@ -4,7 +4,7 @@ Electronbar is a react component and handler for frameless Electron windows that
 
 
 ## Notes
-This package has been made for Windows, although anyone wishing to modify this to match a Linux or Mac look and feel is encouraged to do so and contribute. The source is small, so it should be simple to make any necessary modifications.
+This package has been made for Windows, although anyone wishing to modify this to match a Linux or Mac look and feel is encouraged to do so and contribute. The source is small, so it should be simple to make any modifications or enhancements.
 
 
 ## Screenshots
@@ -60,9 +60,13 @@ const electronbar = new Electronbar({
     title: '<text for title>',
     icon: '<app icon>'
 });
+
+electronbar.setMenu(menu); // update the menu
+electronbar.setIcon(path); // update the icon
+electronbar.setTitle(title); // update the title
 ```
 
-### Working Sample
+### Working Example
 ```js
 import React from 'react';
 import Electronbar from 'electronbar';
@@ -79,29 +83,32 @@ const menuTemplate = [
             {
                 label: 'World',
                 click: () => console.log('Hello World'),
-                accelerator: 'Ctrl+H'
+                accelerator: 'CmdOrCtrl+H'
             }
         ]
     },
+	{ type: 'separator' },
     {
-        role: 'quit'
+        role: 'quit',
+		accelerator: 'Alt+F4'
     }
 ];
 
 class App extends React.Component {
     constructor(props) {
         super(props);
-       
         this.electronbarMount = React.createRef();
-       
+    }
+	
+	componentDidMount() {
         this.electronbar = new Electronbar({
             electron: electron,
-            menu: Menu.buildFromTemplate(menuTemplate),
+            menu: electron.remote.Menu.buildFromTemplate(menuTemplate),
             mountNode: this.electronbarMount,
             title: 'Hello World',
-            icon: 'public/imags/favicon.ico'
+            icon: 'public/imgs/favicon.ico'
         });
-    }
+	}
    
     render() {
         return (
@@ -128,7 +135,7 @@ Call this with a path to an icon to set the titlebar's icon.
 
 
 ## Customizing
-This package offers almost no customization via JS in the library integration. Rather it's encouraged that you modify the CSS directly so that you have a completely uniform look and feel in your app. This library is really small and very straightforward. Just open the eletronbar.css and override the CSS classes in your own CSS.
+This package offers almost no customization via JS in the library integration. Rather it's encouraged that you modify the CSS directly so that you have a completely uniform look and feel in your app. This library is really small and very straightforward. Just open the eletronbar.css to see what classes are available and override them in your own custom CSS.
 
 
 ## Performance
@@ -141,6 +148,16 @@ Electronbar is lightweight. It has three dependencies:
 - reacton-dom
 - classnames
 
+## TODO
+Although the basic use case of a single window is implemented, the folling improvements should be made:
+- support for mac and linux
+- support for additional roles (add Electron.Menu roles in the role map)
+- support for additional OS accelerator translations (add supported Electron.Menu accelerators to the accelerator map)
+- multi-window support (maybe pass an instance to current window instead of electron)
+- move icons out of code and into CSS so customization is easier
+- add more Electron event handlers to fully support all Eletron window events
+- aria support for menu items
+- alt support for menu tooltips
 
 ## Contributing
 Feel free to make changes and submit pull requests whenever.
