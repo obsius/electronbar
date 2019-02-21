@@ -7,6 +7,4 @@
  * Date: Feb 21, 2019
  */
  
- module.exports = {
-	Electronbar: require('lib/Electronbar')
- };
+ module.exports = require('lib/Electronbar').default;
