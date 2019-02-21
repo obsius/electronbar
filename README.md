@@ -10,9 +10,9 @@ This package has been made for Windows, although anyone wishing to modify this t
 
 ## Screenshots
 
-![screenshot1](https://github.com/obsius/electronbar/blob/master/src/doc/1.png)
-![screenshot2](https://github.com/obsius/electronbar/blob/master/src/doc/2.png)
-![screenshot3](https://github.com/obsius/electronbar/blob/master/src/doc/3.gif)
+![screenshot1](https://github.com/obsius/electronbar/blob/master/doc/1.png)
+![screenshot2](https://github.com/obsius/electronbar/blob/master/doc/2.png)
+![screenshot3](https://github.com/obsius/electronbar/blob/master/doc/3.gif)
 
 ## Features
 
