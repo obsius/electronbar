@@ -43,7 +43,7 @@ The titlebar has four main components listed below with the corresponding CSS cl
 
 Icon | Menu | Title | Buttons
 -|-|-|-
-electronbar-icon | electronbar-menu | electronbar-title | electronbar-buttons
+electronbar-favicon | electronbar-menu | electronbar-title | electronbar-buttons
 
 ## Integrating
 Electronbar exposes a class to make a new Electronbar, the constructor for this takes a DOM element as a mounting point. See below for an explanation.
@@ -97,7 +97,7 @@ class App extends React.Component {
         this.electronbar = new Electronbar({
             electron: electron,
             menu: Menu.buildFromTemplate(menuTemplate),
-            mountNode: this.electronMount,
+            mountNode: this.electronbarMount,
             title: 'Hello World',
             icon: 'public/imags/favicon.ico'
         });
@@ -106,7 +106,7 @@ class App extends React.Component {
     render() {
         return (
             <div>
-                <div ref={this.electronMount} />
+                <div ref={this.electronbarMount} />
                 <div>Hello World</div>
             </div>
         );
