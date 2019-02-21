@@ -1,6 +1,6 @@
 {
 	"name": "electronbar",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "A react title bar componenet for Electron.",
 	"author": "Jeff Seaman",
 	"contributors": [
@@ -58,9 +58,12 @@
 		"url": "https://github.com/obsius/electronbar.git"
 	},
 	"keywords": [
-		"node",
 		"electron",
 		"titlebar",
-		"menubar"
+		"menubar",
+		"title",
+		"menu",
+		"frameless",
+		"custom"
 	]
 }
