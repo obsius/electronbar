@@ -8,6 +8,11 @@ Electronbar is a react component and handler for frameless Electron windows that
 ## Notes
 This package has been made for Windows, although anyone wishing to modify this to match a Linux or Mac look and feel is encouraged to do so and contribute. The source is small, so it should be simple to make any necessary modifications.
 
+## Screenshots
+
+![screenshot1](https://github.com/obsius/electronbar/blob/master/src/doc/1.png)
+![screenshot2](https://github.com/obsius/electronbar/blob/master/src/doc/2.png)
+![screenshot3](https://github.com/obsius/electronbar/blob/master/src/doc/3.gif)
 
 ## Features
 
@@ -35,6 +40,7 @@ Has a reference to Electron so it can manage different OS's, listeners to window
 
 ## Layout
 The titlebar has four main components listed below with the corresponding CSS class names for each.
+
 Icon | Menu | Title | Buttons
 -|-|-|-
 electronbar-icon | electronbar-menu | electronbar-title | electronbar-buttons
