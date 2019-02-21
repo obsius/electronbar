@@ -36,14 +36,14 @@ Has a reference to Electron so it can manage different OS's, listeners to window
 ## Layout
 The titlebar has four main components listed below with the corresponding CSS class names for each.
 Icon | Menu | Title | Buttons
--|-
+---|---
 electronbar-icon | electronbar-menu | electronbar-title | electronbar-buttons
 
 
 ## Integrating
 Electronbar exposes a class to make a new Electonbar, the constructor for this takes a DOM element as a mounting point. See below for an explanation.
 
-### Explanation
+### Reference
 ```js
 import Electronbar from 'Electronbar';
 const Electronbar = require('Electronbar');
@@ -112,7 +112,7 @@ class App extends React.Component {
 ## Methods
 
 ##### setMenu(menu)
-Call this with an Electron menu object. Make sure to use the object and not the template. `electron.remote.Menu.buidlFromTempalte()` for example.
+Call this with an Electron menu object. Make sure to use the object and not the template (`electron.remote.Menu.buidlFromTempalte()` for example).
 
 ##### setTitle(title)
 Call this with a title string to set the titlebar's title.
