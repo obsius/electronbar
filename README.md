@@ -148,6 +148,7 @@ Electronbar is lightweight. It has three dependencies:
 - reacton-dom
 - classnames
 
+
 ## TODO
 Although the basic use case of a single window is implemented, the folling improvements should be made:
 - support for mac and linux
@@ -158,6 +159,7 @@ Although the basic use case of a single window is implemented, the folling impro
 - add more Electron event handlers to fully support all Eletron window events
 - aria support for menu items
 - alt support for menu tooltips
+
 
 ## Contributing
 Feel free to make changes and submit pull requests whenever.
