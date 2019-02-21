@@ -6,7 +6,7 @@
 	"contributors": [
 		"Jeff Seaman <mr.jeffrey.seaman@gmail.com> (https://www.ngc6822.com)"
 	],
-	"license": "MIT"
+	"license": "MIT",
 	"main": "index.js",
 	"scripts": {
 		"start": "node index.js"
