@@ -22,7 +22,7 @@
 /* titlebar icon */
 
 .electronbar-favicon {
-	flex-grow: 0;
+	flex: 0 0 auto;
 	padding: 0 5px 0 5px;
 }
 
