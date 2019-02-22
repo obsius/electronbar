@@ -1,6 +1,6 @@
 {
 	"name": "electronbar",
-	"version": "1.0.10",
+	"version": "1.0.11",
 	"description": "A react title bar component and handler for Electron.",
 	"author": "Jeff Seaman",
 	"contributors": [
@@ -9,7 +9,7 @@
 	"license": "MIT",
 	"main": "index.js",
 	"scripts": {
-		"prepare": "babel src -d lib"
+		"prepare": "babel src -d lib && copyfiles -u 1 css/* lib"
 	},
 	"babel": {
 		"plugins": [
@@ -46,7 +46,8 @@
 		"babel-plugin-transform-react-jsx": "^6.24.1",
 		"babel-plugin-transform-runtime": "^6.23.0",
 		"babel-preset-env": "^1.7.0",
-		"babel-preset-stage-2": "^6.24.1"
+		"babel-preset-stage-2": "^6.24.1",
+		"copyfiles": "^2.1.0"
 	},
 	"dependencies": {
 		"classnames": "^2.2.6",
