@@ -173,7 +173,8 @@ class Menu extends React.Component {
 
 	constructor(props) {
 		super(props);
-		window.addEventListener('click', this.handleWindowClick);
+		window.addEventListener('click', this.handleWindowClick, false);
+		window.addEventListener('touchstart', this.handleWindowClick, false);
 	}
 
 	componentWillUnmount() {
@@ -192,7 +193,7 @@ class Menu extends React.Component {
 
 	handleItemClick = (key) => {
 		this.setState({
-			selectedItemKey: this.state.selectedItemKey != null ? null : key
+			selectedItemKey: this.state.selectedItemKey == key ? null : key
 		});
 	};
 
