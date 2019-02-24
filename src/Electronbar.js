@@ -286,6 +286,13 @@ class MenuItem extends React.Component {
 		});
 	};
 
+	close = () => {
+		this.setState({
+			selectedItemKey: null
+		});
+		if (this.props.close) { this.props.close(); }
+	};
+
 	render() {
 
 		let item = this.props.item;
