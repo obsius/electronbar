@@ -318,7 +318,7 @@ class MenuItem extends React.Component {
 						open={i == this.state.selectedItemKey}
 						onClick={this.handleItemClick}
 						onHover={this.handleItemHover}
-						close={this.props.close}
+						close={this.close}
 					/>);
 				}
 				if (item.submenu[i].type == 'separator' || !item.submenu[i].enabled) { disabledCount++; }

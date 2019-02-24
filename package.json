@@ -1,6 +1,6 @@
 {
 	"name": "electronbar",
-	"version": "1.0.13",
+	"version": "1.0.14",
 	"description": "A react title bar component and handler for Electron.",
 	"author": "Jeff Seaman",
 	"contributors": [
