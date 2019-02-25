@@ -250,13 +250,15 @@ class MenuItem extends React.Component {
 		e.stopPropagation();
 
 		if (!this.props.item.enabled) { return; }
+
+		console.log(this.props.item);
 		
 		if (this.props.item.type == 'normal') {
 
 			// set timeout so that React has a chance to update before any potemtially locking function is called.
 			setTimeout(() => this.props.item.click(), 50);
 
-			if (this.props.close) { this.props.close(); }
+			this.close();
 
 		} else if (this.props.onClick) {
 			this.props.onClick(this.props.iKey);
