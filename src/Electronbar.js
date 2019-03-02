@@ -311,9 +311,11 @@ class MenuItem extends React.Component {
 
 	close = () => {
 		this.clearHoverTimeout();
+		
 		this.setState({
 			selectedItemKey: null
 		});
+		
 		if (this.props.close) { this.props.close(); }
 	};
 
@@ -386,8 +388,8 @@ class MenuItem extends React.Component {
 			}
 
 			return (
-				<div className={ cn('electronbar-menu-item',  ...classes) } onMouseLeave={this.handleAntiHover}>
-					<div className="electronbar-menu-item-label" onClick={this.handleClick} onMouseEnter={this.handleHover}>
+				<div className={ cn('electronbar-menu-item',  ...classes) } onMouseEnter={this.handleHover} onMouseLeave={this.handleAntiHover}>
+					<div className="electronbar-menu-item-label" onClick={this.handleClick}>
 						<div className="electronbar-menu-item-label-text">{ translateRole(item) }</div>
 						{expandOrAccelerator}
 					</div>
@@ -397,8 +399,8 @@ class MenuItem extends React.Component {
 		// render a root item
 		} else {
 			return (
-				<div className={ cn('electronbar-top-menu-item', ...classes) } onMouseLeave={this.handleAntiHover}>
-					<div className="electronbar-top-menu-item-label" onClick={this.handleClick} onMouseEnter={this.handleHover}>{ translateRole(item) }</div>
+				<div className={ cn('electronbar-top-menu-item', ...classes) } onMouseEnter={this.handleHover} onMouseLeave={this.handleAntiHover}>
+					<div className="electronbar-top-menu-item-label" onClick={this.handleClick}>{ translateRole(item) }</div>
 					{itemContainer}
 				</div>
 			);
