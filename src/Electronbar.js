@@ -5,7 +5,7 @@ import cn from 'classnames';
 /**
  * How much time in ms to wait before showing or hiding a submenu.
  */
-const HOVER_TIMEOUT = 100;
+const HOVER_TIMEOUT = 200;
 
 /**
  * Map electron menu accelerators to platform specific keys.
@@ -277,8 +277,10 @@ class MenuItem extends React.Component {
 
 	handleAntiHover = () => {
 		this.clearHoverTimeout();
+
 		this.hoverTimer = setTimeout(() => {
 			this.hoverTimer = null;
+
 			this.setState({
 				selectedItemKey: null
 			});
@@ -294,12 +296,17 @@ class MenuItem extends React.Component {
 
 	handleItemHover = (key) => {
 		this.clearHoverTimeout();
-		this.hoverTimer = setTimeout(() => {
-			this.hoverTimer = null;
-			this.setState({
-				selectedItemKey: key
-			});
-		}, HOVER_TIMEOUT);
+
+		if (this.state.selectedItemKey != key) {
+			this.hoverTimer = setTimeout(() => {
+
+				this.hoverTimer = null;
+
+				this.setState({
+					selectedItemKey: key
+				});
+			}, HOVER_TIMEOUT);
+		}
 	};
 
 	close = () => {
@@ -349,7 +356,7 @@ class MenuItem extends React.Component {
 			}
 
 			if (open && enabled && items.length && disabledCount < item.submenu.length) {
-				itemContainer = <div className={ cn( depth ? 'electronbar-menu-item-children' : 'electronbar-top-menu-item-children') } onMouseLeave={this.handleAntiHover}>{items}</div>;
+				itemContainer = <div className={ cn( depth ? 'electronbar-menu-item-children' : 'electronbar-top-menu-item-children') }>{items}</div>;
 			}
 		}
 
@@ -379,7 +386,7 @@ class MenuItem extends React.Component {
 			}
 
 			return (
-				<div className={ cn('electronbar-menu-item',  ...classes) }>
+				<div className={ cn('electronbar-menu-item',  ...classes) } onMouseLeave={this.handleAntiHover}>
 					<div className="electronbar-menu-item-label" onClick={this.handleClick} onMouseEnter={this.handleHover}>
 						<div className="electronbar-menu-item-label-text">{ translateRole(item) }</div>
 						{expandOrAccelerator}
@@ -390,7 +397,7 @@ class MenuItem extends React.Component {
 		// render a root item
 		} else {
 			return (
-				<div className={ cn('electronbar-top-menu-item', ...classes) }>
+				<div className={ cn('electronbar-top-menu-item', ...classes) } onMouseLeave={this.handleAntiHover}>
 					<div className="electronbar-top-menu-item-label" onClick={this.handleClick} onMouseEnter={this.handleHover}>{ translateRole(item) }</div>
 					{itemContainer}
 				</div>
