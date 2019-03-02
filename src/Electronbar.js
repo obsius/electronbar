@@ -3,6 +3,11 @@ import reactDom from 'react-dom';
 import cn from 'classnames';
 
 /**
+ * How much time in ms to wait before showing or hiding a submenu.
+ */
+const HOVER_TIMEOUT = 100;
+
+/**
  * Map electron menu accelerators to platform specific keys.
  */
 const acceleratorMap = {
@@ -238,6 +243,8 @@ class Menu extends React.Component {
  */
 class MenuItem extends React.Component {
 
+	hoverTimer = null;
+
 	state = {
 		selectedItemKey: null
 	};
@@ -250,8 +257,6 @@ class MenuItem extends React.Component {
 		e.stopPropagation();
 
 		if (!this.props.item.enabled) { return; }
-
-		console.log(this.props.item);
 		
 		if (this.props.item.type == 'normal') {
 
@@ -271,29 +276,46 @@ class MenuItem extends React.Component {
 	};
 
 	handleAntiHover = () => {
-		this.setState({
-			selectedItemKey: null
-		});
+		this.clearHoverTimeout();
+		this.hoverTimer = setTimeout(() => {
+			this.hoverTimer = null;
+			this.setState({
+				selectedItemKey: null
+			});
+		}, HOVER_TIMEOUT);
 	}
 
 	handleItemClick = (key) => {
+		this.clearHoverTimeout();
 		this.setState({
 			selectedItemKey: key
 		});
 	};
 
 	handleItemHover = (key) => {
-		this.setState({
-			selectedItemKey: key
-		});
+		this.clearHoverTimeout();
+		this.hoverTimer = setTimeout(() => {
+			this.hoverTimer = null;
+			this.setState({
+				selectedItemKey: key
+			});
+		}, HOVER_TIMEOUT);
 	};
 
 	close = () => {
+		this.clearHoverTimeout();
 		this.setState({
 			selectedItemKey: null
 		});
 		if (this.props.close) { this.props.close(); }
 	};
+
+	clearHoverTimeout() {
+		if (this.hoverTimer) {
+			clearTimeout(this.hoverTimer);
+			this.hoverTimer = null;
+		}
+	}
 
 	render() {
 
