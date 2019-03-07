@@ -34,8 +34,9 @@ const roleMap = {
  */
 export default class Electronbar {
 
-	constructor({ electron, menu, title, icon, mountNode }) {
+	constructor({ electron, window, menu, title, icon, mountNode }) {
 		this.electron = electron;
+		this.window = window;
 		this.title = title;
 		this.icon = icon;
 		this.mountNode = mountNode;
@@ -43,36 +44,19 @@ export default class Electronbar {
 		this.setMenu(menu);
 	}
 
-	getWindow() {
-		let window = this.electron.remote.getCurrentWindow();
-		if (window) {
-			return window;
-		} else {
-			return {
-				valid: false,
-				isMaximized: () => false,
-				isFullScreen: () => false,
-				minimize: ()=>{},
-				maximize: ()=>{},
-				unmaximize: ()=>{},
-				close: ()=>{}
-			};
-		}
-	}
-
 	render() {
 		reactDom.render(<TitleBar
 			menu={this.menu}
 			title={this.title}
 			icon={this.icon}
-			getWindow={ () => this.getWindow() }
+			window={this.window}
 		/>, this.mountNode);
 	}
 
 	setMenu(menu) {
 
 		// register all accelerators
-		this.electron.remote.Menu.setApplicationMenu(menu)
+		this.electron.remote.Menu.setApplicationMenu(menu);
 
 		// the electron menu is fucked up and really slow, make a faster version
 		this.menu = parseMenu(menu);
@@ -161,7 +145,7 @@ class TitleBar extends React.Component {
 				<Favicon icon={this.props.icon} />
 				<Menu menu={this.props.menu} />
 				<Title title={this.props.title} />
-				<Buttons getWindow={this.props.getWindow} />
+				<Buttons window={this.props.window} />
 			</div>
 		);
 	}
@@ -269,6 +253,10 @@ class MenuItem extends React.Component {
 			this.props.onClick(this.props.iKey);
 		}
 	};
+
+	componentWillUnmount() {
+		this.clearHoverTimeout();
+	}
 
 	handleHover = (e) => {
 		e.stopPropagation();
@@ -421,51 +409,55 @@ class Buttons extends React.Component {
 	constructor(props) {
 		super(props);
 
-		let window = this.props.getWindow();
-		this.state.maximized = window.isMaximized();
-		this.state.fullScreen = window.isFullScreen();
+		this.window = props.window;
+		this.state.maximized = this.window.isMaximized();
+		this.state.fullScreen = this.window.isFullScreen();
 
-		window.on('enter-full-screen', this.onWindowChange);
-		window.on('leave-full-screen', this.onWindowChange);
-		window.on('maximize', this.onWindowChange);
-		window.on('unmaximize', this.onWindowChange);
+		['enter-full-screen', 'leave-full-screen', 'maximize', 'unmaximize'].forEach((event) => {
+			this.window.on(event, this.onWindowChange);
+		});
+
+		this.window.on('close', this.destroy);
 	}
 
 	componentWillUnmount() {
-		window.removeListener('enter-full-screen', this.onWindowChange);
-		window.removeListener('leave-full-screen', this.onWindowChange);
-		window.removeListener('maximize', this.onWindowChange);
-		window.removeListener('unmaximize', this.onWindowChange);
+		this.destroy();
 	}
+
+	destroy = () => {
+		['enter-full-screen', 'leave-full-screen', 'maximize', 'unmaximize'].forEach((event) => {
+			this.window.removeListener(event, this.onWindowChange);
+		});
+
+		this.window.removeListener('close', this.destroy);
+	};
 
 	onWindowChange = () => {
-		let window = this.props.getWindow();
 		this.setState({
-			maximized: window.isMaximized(),
-			fullScreen: window.isFullScreen()
+			maximized: this.window.isMaximized(),
+			fullScreen: this.window.isFullScreen()
 		});
-	}
+	};
 
 	handleUnFullscreenClick = () => {
-		this.props.getWindow().setFullScreen(false);
-	}
+		this.window.setFullScreen(false);
+	};
 
 	handleMinimizeClick = () => {
-		this.props.getWindow().minimize();
-	}
+		this.window.minimize();
+	};
 
 	handleMaximizeClick = () => {
-		let window = this.props.getWindow();
-		if (window.isMaximized()) {
-			window.unmaximize();
+		if (this.window.isMaximized()) {
+			this.window.unmaximize();
 		} else {
-			window.maximize();
+			this.window.maximize();
 		}
-	}
+	};
 
 	handleCloseClick = () => {
-		this.props.getWindow().close();
-	}
+		this.window.close();
+	};
 
 	render() {
 
