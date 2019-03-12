@@ -55,6 +55,7 @@ const Electronbar = require('electronbar');
 
 const electronbar = new Electronbar({
     electron: '<pass the electron reference here>',
+	window: '<pass the reference to the electron window here>',
     menu: '<pass a reference to your menu, not the template, but the Menu.buildFromTemplate() object>',
     mountNode: '<DOM element container that will hold Electronbar, use document.getElementById() or make a ref in React for this>',
     title: '<text for title>',
@@ -103,6 +104,7 @@ class App extends React.Component {
 	componentDidMount() {
         this.electronbar = new Electronbar({
             electron: electron,
+			window: electron.remote.getCurrentWindow(),
             menu: electron.remote.Menu.buildFromTemplate(menuTemplate),
             mountNode: this.electronbarMount,
             title: 'Hello World',
@@ -150,11 +152,10 @@ Electronbar is lightweight. It has three dependencies:
 
 
 ## TODO
-Although the basic use case of a single window is implemented, the folling improvements should be made:
+Although the basic use case of a single window for Windows is implemented, the folling improvements should be made:
 - support for mac and linux
 - support for additional roles (add Electron.Menu roles in the role map)
 - support for additional OS accelerator translations (add supported Electron.Menu accelerators to the accelerator map)
-- multi-window support (maybe pass an instance to current window instead of electron)
 - move icons out of code and into CSS so customization is easier
 - add more Electron event handlers to fully support all Eletron window events
 - aria support for menu items
