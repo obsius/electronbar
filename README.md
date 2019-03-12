@@ -54,12 +54,12 @@ import Electronbar from 'electronbar';
 const Electronbar = require('electronbar');
 
 const electronbar = new Electronbar({
-    electron: '<pass the electron reference here>',
+	electron: '<pass the electron reference here>',
 	window: '<pass the reference to the electron window here>',
-    menu: '<pass a reference to your menu, not the template, but the Menu.buildFromTemplate() object>',
-    mountNode: '<DOM element container that will hold Electronbar, use document.getElementById() or make a ref in React for this>',
-    title: '<text for title>',
-    icon: '<app icon>'
+	menu: '<pass a reference to your menu, not the template, but the Menu.buildFromTemplate() object>',
+	mountNode: '<DOM element container that will hold Electronbar, use document.getElementById() or make a ref in React for this>',
+	title: '<text for title>',
+	icon: '<app icon>'
 });
 
 electronbar.setMenu(menu); // update the menu
@@ -78,48 +78,48 @@ import './my-electronbar-style-override.css';
 const electron = window.require('electron');
 
 const menuTemplate = [
-    {
-        label: 'Hello',
-        submenu: [
-            {
-                label: 'World',
-                click: () => console.log('Hello World'),
-                accelerator: 'CmdOrCtrl+H'
-            }
-        ]
-    },
+	{
+		label: 'Hello',
+		submenu: [
+			{
+				label: 'World',
+				click: () => console.log('Hello World'),
+				accelerator: 'CmdOrCtrl+H'
+			}
+		]
+	},
 	{ type: 'separator' },
-    {
-        role: 'quit',
+	{
+		role: 'quit',
 		accelerator: 'Alt+F4'
-    }
+	}
 ];
 
 class App extends React.Component {
-    constructor(props) {
-        super(props);
-        this.electronbarMount = React.createRef();
-    }
-	
-	componentDidMount() {
-        this.electronbar = new Electronbar({
-            electron: electron,
-			window: electron.remote.getCurrentWindow(),
-            menu: electron.remote.Menu.buildFromTemplate(menuTemplate),
-            mountNode: this.electronbarMount,
-            title: 'Hello World',
-            icon: 'public/imgs/favicon.ico'
-        });
+	constructor(props) {
+		super(props);
+		this.electronbarMount = React.createRef();
 	}
-   
-    render() {
-        return (
-            <div>
-                <div ref={this.electronbarMount} />
-                <div>Hello World</div>
-            </div>
-        );
-    }
+
+	componentDidMount() {
+		this.electronbar = new Electronbar({
+			electron: electron,
+			window: electron.remote.getCurrentWindow(),
+			menu: electron.remote.Menu.buildFromTemplate(menuTemplate),
+			mountNode: this.electronbarMount,
+			title: 'Hello World',
+			icon: 'public/imgs/favicon.ico'
+		});
+	}
+
+	render() {
+		return (
+			<div>
+				<div ref={this.electronbarMount} />
+				<div>Hello World</div>
+			</div>
+		);
+	}
 }
 ```
 
