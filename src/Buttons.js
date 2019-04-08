@@ -22,7 +22,7 @@ export default class Buttons extends React.Component {
 		});
 
 		this.window.on('close', this.destroy);
-		window.addEventListener('onbeforeunload', this.destroy);
+		window.addEventListener('beforeunload', this.destroy);
 
 	}
 
@@ -36,6 +36,7 @@ export default class Buttons extends React.Component {
 		});
 
 		this.window.removeListener('close', this.destroy);
+		window.removeEventListener('beforeunload', this.destroy);
 	};
 
 	onWindowChange = () => {
@@ -94,20 +95,6 @@ const UnFullscreenButton = ({ onClick }) => <div className="electronbar-button e
 const CloseButton = ({ onClick }) => <div className="electronbar-button electronbar-button-close" onClick={onClick}><IconClose /></div>;
 
 /* icons */
-
-const IconChevron = () => (
-	<div className="electronbar-icon">
-		<svg
-			aria-hidden="true"
-			focusable="false"
-			viewBox="0 0 14 14">
-				<path
-					fill="currentColor"
-					d="M4.52 12.364L9.879 7 4.52 1.636l.615-.615L11.122 7l-5.986 5.98-.615-.616z">
-				</path>
-		</svg>
-	</div>
-);
 
 const IconMinimize = () => (
 	<div className="electronbar-icon">
