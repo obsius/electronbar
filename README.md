@@ -145,10 +145,9 @@ The Electron menu is a bit slow to read from, lots of properties, and accessing 
 
 
 ## Dependencies
-Electronbar is lightweight. It has three dependencies:
+Electronbar is lightweight. It has two dependencies:
 - react
 - reacton-dom
-- classnames
 
 
 ## TODO
