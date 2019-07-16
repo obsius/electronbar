@@ -14,12 +14,10 @@ export default class Menu extends React.Component {
 	constructor(props) {
 		super(props);
 		window.addEventListener('click', this.handleWindowClick, false);
-		window.addEventListener('touchstart', this.handleWindowClick, false);
 	}
 
 	componentWillUnmount() {
 		window.removeEventListener('click', this.handleWindowClick);
-		window.removeEventListener('touchstart', this.handleWindowClick);
 	}
 
 	close() {
