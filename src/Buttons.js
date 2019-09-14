@@ -21,9 +21,8 @@ export default class Buttons extends React.Component {
 			this.window.on(event, this.onWindowChange);
 		});
 
-		this.window.on('close', this.destroy);
+		this.window.on('closed', this.destroy);
 		window.addEventListener('beforeunload', this.destroy);
-
 	}
 
 	componentWillUnmount() {
@@ -35,7 +34,7 @@ export default class Buttons extends React.Component {
 			this.window.removeListener(event, this.onWindowChange);
 		});
 
-		this.window.removeListener('close', this.destroy);
+		this.window.removeListener('closed', this.destroy);
 		window.removeEventListener('beforeunload', this.destroy);
 	};
 
