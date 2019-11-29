@@ -1,13 +1,14 @@
 {
 	"name": "electronbar",
-	"version": "1.2.2",
+	"version": "1.2.3",
 	"description": "A react title bar component and handler for Electron.",
-	"author": "Jeff Seaman",
-	"contributors": [
-		"Jeff Seaman <mr.jeffrey.seaman@gmail.com> (https://www.ngc6822.com)"
-	],
+	"author": "Jeff Seaman <mr.jeffrey.seaman@gmail.com> (https://www.ngc6822.com)",
 	"license": "MIT",
 	"main": "index.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/obsius/electronbar.git"
+	},
 	"scripts": {
 		"prepare": "rollup -c && copyfiles -u 1 css/* lib"
 	},
@@ -28,21 +29,17 @@
 		]
 	},
 	"devDependencies": {
-		"@babel/core": "^7.6.0",
-		"@babel/plugin-proposal-class-properties": "^7.5.5",
-		"@babel/plugin-transform-react-jsx": "^7.3.0",
-		"@babel/preset-env": "^7.6.0",
+		"@babel/core": "^7.7.2",
+		"@babel/plugin-proposal-class-properties": "^7.7.0",
+		"@babel/plugin-transform-react-jsx": "^7.7.0",
+		"@babel/preset-env": "^7.7.1",
 		"copyfiles": "^2.1.1",
-		"rollup": "^1.21.3",
+		"rollup": "^1.27.0",
 		"rollup-plugin-babel": "^4.3.3"
 	},
 	"dependencies": {
-		"react": "^16.9.0",
-		"react-dom": "^16.9.0"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/obsius/electronbar.git"
+		"react": "^16.12.0",
+		"react-dom": "^16.12.0"
 	},
 	"keywords": [
 		"electron",
