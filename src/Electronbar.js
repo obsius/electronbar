@@ -19,12 +19,14 @@ export default class Electronbar {
 	}
 
 	render() {
-		reactDom.render(<TitleBar
-			menu={this.menu}
-			title={this.title}
-			icon={this.icon}
-			window={this.window}
-		/>, this.mountNode);
+		if (this.window) {
+			reactDom.render(<TitleBar
+				menu={this.menu}
+				title={this.title}
+				icon={this.icon}
+				window={this.window}
+			/>, this.mountNode);
+		}
 	}
 
 	setMenu(menu) {
