@@ -1,6 +1,11 @@
 import React from 'react';
 
 /**
+ * How much time in ms to wait before running an onClick function (used to allow the UI to respond first).
+ */
+const CLICK_DELAY = 50;
+
+/**
  * How much time in ms to wait before showing or hiding a submenu.
  */
 const HOVER_TIMEOUT = 200;
@@ -42,31 +47,9 @@ export default class MenuItem extends React.Component {
 		super(props);
 	}
 
-	handleClick = (e) => {
-		e.stopPropagation();
-
-		if (!this.props.item.enabled) { return; }
-		
-		if (this.props.item.type == 'normal') {
-
-			// set timeout so that React has a chance to update before any potemtially locking function is called.
-			setTimeout(() => this.props.item.click(), 50);
-
-			this.close();
-
-		} else if (this.props.onClick) {
-			this.props.onClick(this.props.iKey);
-		}
-	};
-
 	componentWillUnmount() {
 		this.clearHoverTimeout();
 	}
-
-	handleHover = (e) => {
-		e.stopPropagation();
-		if (this.props.item.enabled && this.props.onHover) { this.props.onHover(this.props.iKey); }
-	};
 
 	handleAntiHover = () => {
 		this.clearHoverTimeout();
@@ -78,7 +61,29 @@ export default class MenuItem extends React.Component {
 				selectedItemKey: null
 			});
 		}, HOVER_TIMEOUT);
-	}
+	};
+
+	handleClick = (e) => {
+		e.stopPropagation();
+
+		if (!this.props.item.enabled) { return; }
+		
+		if (this.props.item.type == 'normal') {
+
+			// set timeout so that React has a chance to update before any potentially locking function is called.
+			setTimeout(() => this.props.item.click(), CLICK_DELAY);
+
+			this.close();
+
+		} else if (this.props.onClick) {
+			this.props.onClick(this.props.iKey);
+		}
+	};
+
+	handleHover = (e) => {
+		e.stopPropagation();
+		if (this.props.item.enabled && this.props.onHover) { this.props.onHover(this.props.iKey); }
+	};
 
 	handleItemClick = (key) => {
 		this.clearHoverTimeout();
@@ -135,19 +140,27 @@ export default class MenuItem extends React.Component {
 
 			let items = [];
 
+			// iterate through submenu
 			for (let i = 0; i < item.submenu.length; ++i) {
+
 				if (item.submenu[i].visible) {
-					items.push(<MenuItem
-						key={i} iKey={i}
-						depth={depth + 1}
-						item={item.submenu[i]}
-						open={i == this.state.selectedItemKey}
-						onClick={this.handleItemClick}
-						onHover={this.handleItemHover}
-						close={this.close}
-					/>);
+					items.push(
+						<MenuItem
+							key={i}
+							iKey={i}
+							depth={depth + 1}
+							item={item.submenu[i]}
+							open={i == this.state.selectedItemKey}
+							onClick={this.handleItemClick}
+							onHover={this.handleItemHover}
+							close={this.close}
+						/>
+					);
 				}
-				if (item.submenu[i].type == 'separator' || !item.submenu[i].enabled) { disabledCount++; }
+				
+				if (item.submenu[i].type == 'separator' || !item.submenu[i].enabled) {
+					disabledCount++;
+				}
 			}
 
 			if (open && enabled && items.length && disabledCount < item.submenu.length) {
@@ -167,33 +180,39 @@ export default class MenuItem extends React.Component {
 		// render a separator
 		if (item.type == 'separator') {
 			return (
-				<div className="electronbar-seperator" onClick={this.handleClick}><hr /></div>
+				<div className="electronbar-seperator" onClick={this.handleClick}>
+					<hr />
+				</div>
 			);
-		// render a not root item
+
+		// render a branch item
 		} else if (depth) {
 
-			let expandOrAccelerator = [];
-
-			if (hasChildren) {
-				expandOrAccelerator = <Expander />;
-			} else if (item.accelerator) {
-				expandOrAccelerator = <Accelerator accelerator={item.accelerator} />;
-			}
+			let expandOrAccelerator = hasChildren ? (
+				<Expander />
+			) : (
+				<Accelerator accelerator={item.accelerator} />
+			);
 
 			return (
 				<div className={ ['electronbar-menu-item',  ...classes].join(' ') } onMouseEnter={this.handleHover} onMouseLeave={this.handleAntiHover}>
 					<div className="electronbar-menu-item-label" onClick={this.handleClick}>
-						<div className="electronbar-menu-item-label-text">{ translateRole(item) }</div>
+						<div className="electronbar-menu-item-label-text">
+							{ translateRole(item) }
+						</div>
 						{expandOrAccelerator}
 					</div>
 					{itemContainer}
 				</div>
 			);
+
 		// render a root item
 		} else {
 			return (
 				<div className={ ['electronbar-top-menu-item', ...classes].join(' ') } onMouseEnter={this.handleHover} onMouseLeave={this.handleAntiHover}>
-					<div className="electronbar-top-menu-item-label" onClick={this.handleClick}>{ translateRole(item) }</div>
+					<div className="electronbar-top-menu-item-label" onClick={this.handleClick}>
+						{ translateRole(item) }
+					</div>
 					{itemContainer}
 				</div>
 			);
@@ -205,25 +224,23 @@ export default class MenuItem extends React.Component {
 
 /**
  * Translate electron menu accelerator names to more OS specific ones. Use the accelerator map above.
- * @param {*} accelerator electron menu item accelerator
- * @param {*} platform system's platform ("windows", "linux", "mac")
+ * @param {string} accelerator - electron menu item accelerator
+ * @param {string} platform - system's platform ("windows", "linux", "mac")
  */
 function translateAccelerator(accelerator, platform = 'windows') {
 
-	let labelParts = [];
-	let parts = accelerator.split('+');
+	let parts = accelerator ? ('' + accelerator).split('+') : [];
 
-	for (let part of parts) {
-		let translatedAccelerator = acceleratorMap[platform][part];
-		labelParts.push(translatedAccelerator ? translatedAccelerator : part);
+	for (let i = 0; i < parts.length; ++i) {
+		parts[i] = acceleratorMap[platform][parts[i]] || parts[i];
 	}
 
-	return labelParts.join('+');
+	return parts.join('+');
 }
 
 /**
  * Translate electron menu role types to menu bar labels. Use the role map above.
- * @param {*} item electron menu item
+ * @param {obj} item - electron menu item
  */
 function translateRole(item) {
 	return item.label ? item.label : roleMap[item.role];
@@ -231,8 +248,21 @@ function translateRole(item) {
 
 /* statics */
 
-const Expander = () => <div className="electronbar-menu-item-label-expander"><IconChevron /></div>;
-const Accelerator = ({ accelerator }) => <div className="electronbar-menu-item-label-accelerator">{ translateAccelerator(accelerator) }</div>;
+const Expander = () => (
+	<div className="electronbar-menu-item-label-expander">
+		<IconChevron />
+	</div>
+);
+
+const Accelerator = ({ accelerator }) => {
+	return accelerator ? (
+		<div className="electronbar-menu-item-label-accelerator">
+			{ translateAccelerator(accelerator) }
+		</div>
+	) : (
+		null
+	);
+};
 
 /* icons */
 

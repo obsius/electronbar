@@ -68,20 +68,19 @@ export default class Buttons extends React.Component {
 
 	render() {
 
-		let buttons = [];
-
-		if (this.state.fullScreen) {
-			buttons.push(<UnFullscreenButton key="fullscreen-button" onClick={this.handleUnFullscreenClick} />);
-		} else {
-			buttons.push(<MinimizeButton key="minimize-button" onClick={this.handleMinimizeClick} />);
-			buttons.push(<MaximizeButton key="maximize-button" maximized={this.state.maximized} onClick={this.handleMaximizeClick} />);
-		}
-
-		buttons.push(<CloseButton key="close-button" onClick={this.handleCloseClick} />);
+		let buttons = this.state.fullScreen ? (
+			<UnFullscreenButton onClick={this.handleUnFullscreenClick} />
+		) : (
+			<React.Fragment>
+				<MinimizeButton onClick={this.handleMinimizeClick} />
+				<MaximizeButton maximized={this.state.maximized} onClick={this.handleMaximizeClick} />
+			</React.Fragment>
+		);
 
 		return (
 			<div className="electronbar-buttons">
-				{buttons}
+				{ buttons }
+				<CloseButton key="close-button" onClick={this.handleCloseClick} />
 			</div>
 		);
 	}
@@ -89,10 +88,29 @@ export default class Buttons extends React.Component {
 
 /* statics */
 
-const MinimizeButton = ({ onClick }) => <div className="electronbar-button electronbar-button-minimize" onClick={onClick}><IconMinimize /></div>;
-const MaximizeButton = ({ onClick, maximized = false }) => <div className="electronbar-button electronbar-button-maximize" onClick={onClick}>{ maximized ? <IconUnMaximize /> : <IconMaximize /> }</div>;
-const UnFullscreenButton = ({ onClick }) => <div className="electronbar-button electronbar-button-unfullscreen" onClick={onClick}><IconUnMaximize /></div>;
-const CloseButton = ({ onClick }) => <div className="electronbar-button electronbar-button-close" onClick={onClick}><IconClose /></div>;
+const MinimizeButton = ({ onClick }) => (
+	<div className="electronbar-button electronbar-button-minimize" onClick={onClick}>
+		<IconMinimize />
+	</div>
+);
+
+const MaximizeButton = ({ onClick, maximized = false }) => (
+	<div className="electronbar-button electronbar-button-maximize" onClick={onClick}>
+		{ maximized ? <IconUnMaximize /> : <IconMaximize /> }
+	</div>
+);
+
+const UnFullscreenButton = ({ onClick }) => (
+	<div className="electronbar-button electronbar-button-unfullscreen" onClick={onClick}>
+		<IconUnMaximize />
+	</div>
+);
+
+const CloseButton = ({ onClick }) => (
+	<div className="electronbar-button electronbar-button-close" onClick={onClick}>
+		<IconClose />
+	</div>
+);
 
 /* icons */
 

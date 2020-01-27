@@ -49,23 +49,27 @@ export default class Menu extends React.Component {
 		let menu = this.props.menu;
 
 		let items = [];
+		
 		for (let i = 0; i < menu.length; ++i) {
 			if (menu[i].visible) {
-				items.push(<MenuItem
-					key={i} iKey={i}
-					depth={0}
-					item={menu[i]}
-					open={i == this.state.selectedItemKey}
-					onClick={this.handleItemClick}
-					onHover={this.handleItemHover}
-					close={ () => this.close() }
-				/>);
+				items.push(
+					<MenuItem
+						key={i}
+						iKey={i}
+						depth={0}
+						item={menu[i]}
+						open={i == this.state.selectedItemKey}
+						onClick={this.handleItemClick}
+						onHover={this.handleItemHover}
+						close={ () => this.close() }
+					/>
+				);
 			}
 		}
 
 		return (
 			<div className="electronbar-menu">
-				{items}
+				{ items }
 			</div>
 		);
 	}

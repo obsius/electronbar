@@ -9,6 +9,7 @@ import TitleBar from './Titlebar';
 export default class Electronbar {
 
 	constructor({ electron, window, menu, title, icon, mountNode }) {
+		
 		this.electron = electron;
 		this.window = window;
 		this.title = title;
@@ -20,19 +21,32 @@ export default class Electronbar {
 
 	render() {
 		if (this.window) {
-			reactDom.render(<TitleBar
-				menu={this.menu}
-				title={this.title}
-				icon={this.icon}
-				window={this.window}
-			/>, this.mountNode);
+			reactDom.render(
+				<TitleBar
+					menu={this.menu}
+					title={this.title}
+					icon={this.icon}
+					window={this.window}
+				/>,
+				this.mountNode
+			);
 		}
 	}
 
 	setMenu(menu) {
 
-		// register all accelerators
-		this.electron.remote.Menu.setApplicationMenu(menu);
+		// check if an electron or electronbar built menu was passed (check append property)
+		let prebuiltMenu = !!menu.append;
+
+		// set electron menu if an electron built menu was provided
+		if (prebuiltMenu) {
+			this.electron.remote.Menu.setApplicationMenu(menu);
+
+		// hijack the menu to create hidden menu item acceleartors
+		} else {
+			let acceleratorMenu = this.electron.remote.Menu.buildFromTemplate(buildAcceleratorMenuTemplate(menu));
+			this.electron.remote.Menu.setApplicationMenu(acceleratorMenu);
+		}
 
 		// the electron menu is fucked up and really slow, make a faster version
 		this.menu = parseMenu(menu);
@@ -40,30 +54,63 @@ export default class Electronbar {
 		this.render();
 	}
 
-	setTitle(title) {
-		this.title = title;
-		this.render();
-	}
-
 	setIcon(icon) {
 		this.icon = icon;
 		this.render();
 	}
+
+	setTitle(title) {
+		this.title = title;
+		this.render();
+	}
 }
+
+/**
+ * The electron menu uses IPC for getters and setters and is really slow.
+ * Use this function instead if electronbar will handle your menu entirely.
+ * 
+ * @param {*} template - the electron menu template
+ */
+Electronbar.buildMenuFromTemplate = (template) => {
+
+	if (!template) { return {}; }
+
+	// root
+	if (Array.isArray(template)) {
+		return {
+			items: template.map((template) => Electronbar.buildMenuFromTemplate(template))
+		};
+
+	// branch
+	} else {
+
+		if (template.submenu) {
+			template.submenu = {
+				items: template.submenu.map((template) => Electronbar.buildMenuFromTemplate(template))
+			};
+		}
+
+		return {
+			enabled: true,
+			visible: true,
+			type: template.submenu ? 'submenu' : 'normal',
+			...template
+		};
+	}
+};
 
 /* internal */
 
 /**
  * The electron menu is huge and slow, make a smaller and faster version.
- * @param {*} menu the electron menu (not the template, the built menu) 
+ * @param {*} menu - the electron menu (not the template, the built menu)
  */
 function parseMenu(menu) {
 
 	let liteMenu = [];
-	let items = menu.items ? menu.items : menu.submenu ? menu.submenu.items : [];
 	
-	for (let item of items) {
-		let liteItem = {
+	for (let item of menu.items) {
+		liteMenu.push({
 			accelerator: item.accelerator,
 			click: item.click ? item.click : ()=>{},
 			enabled: item.enabled,
@@ -71,11 +118,39 @@ function parseMenu(menu) {
 			role: item.role,
 			type: item.type,
 			visible: item.visible,
-			submenu: parseMenu(item)
-		};
-
-		liteMenu.push(liteItem);
+			submenu: item.submenu ? parseMenu(item.submenu) : undefined
+		});
 	}
 
 	return liteMenu;
+}
+
+/**
+ * When using an electronbar menu, accelerators need to be made on a virtual menu.
+ * @param {*} menu - the electronbar menu
+ */
+function buildAcceleratorMenuTemplate(menu) {
+
+	let items = [];
+
+	for (let item of menu.items) {
+
+		if (item.visible && item.enabled) {
+
+			if (item.accelerator && item.click) {
+				items.push({
+					label: '',
+					accelerator: item.accelerator,
+					click: item.click,
+					visible: false
+				});
+			}
+
+			if (item.submenu) {
+				items = items.concat(buildAcceleratorMenuTemplate(item.submenu));
+			}
+		}
+	}
+
+	return items;
 }

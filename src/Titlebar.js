@@ -26,5 +26,14 @@ export default class TitleBar extends React.Component {
 
 /* statics */
 
-const Favicon = ({ icon, onClick }) => <div className="electronbar-favicon" onClick={onClick}><img src={icon} alt="" /></div>;
-const Title = ({ title, onClick }) => <div className="electronbar-title" onClick={onClick}>{title}</div>;
+const Favicon = ({ icon, onClick }) => (
+	<div className="electronbar-favicon" onClick={onClick}>
+		<img src={icon} alt="" />
+	</div>
+);
+
+const Title = ({ title, onClick }) => (
+	<div className="electronbar-title" onClick={onClick}>
+		{ title }
+	</div>
+);

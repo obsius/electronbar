@@ -103,6 +103,7 @@ const menuTemplate = [
 ];
 
 class App extends React.Component {
+
 	constructor(props) {
 		super(props);
 		this.electronbarMount = React.createRef();
@@ -113,7 +114,7 @@ class App extends React.Component {
 			electron: electron,
 			window: electron.remote.getCurrentWindow(),
 			menu: electron.remote.Menu.buildFromTemplate(menuTemplate),
-			mountNode: this.electronbarMount,
+			mountNode: this.electronbarMount.current,
 			title: 'Hello World',
 			icon: 'public/imgs/favicon.ico'
 		});
