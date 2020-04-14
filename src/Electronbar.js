@@ -21,7 +21,7 @@ export default class Electronbar {
 
 	destroy() {
 
-		reactDom.unmountComponentAtNode(this.mountNode);
+		this.unmount();
 
 		this.electron = null;
 		this.window	= null;
@@ -71,6 +71,10 @@ export default class Electronbar {
 	setTitle(title) {
 		this.title = title;
 		this.render();
+	}
+
+	unmount() {
+		reactDom.unmountComponentAtNode(this.mountNode);
 	}
 }
 
