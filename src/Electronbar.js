@@ -19,6 +19,15 @@ export default class Electronbar {
 		this.setMenu(menu);
 	}
 
+	destroy() {
+
+		reactDom.unmountComponentAtNode(this.mountNode);
+
+		this.electron = null;
+		this.window	= null;
+		this.mountNode = null;
+	}
+
 	render() {
 		if (this.window) {
 			reactDom.render(

@@ -5,17 +5,18 @@
 	position: relative;
 	width: 100%;
 	height: 30px;
-	z-index: 1000;
 	line-height: 30px;
+	z-index: 1000;
 
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 
 	background-color: #333333;
-	font-size: 14px;
+	font-size: 13px;
 	vertical-align: middle;
 	user-select: none;
+
 	-webkit-app-region: drag;
 }
 
@@ -46,9 +47,10 @@
 /* menu */
 
 .electronbar-menu {
-	flex-grow: 0;
 	display: inline-flex;
+	flex-grow: 0;
 	flex-direction: row;
+
 	-webkit-app-region: no-drag;
 }
 
@@ -64,8 +66,8 @@
 .electronbar-top-menu-item-label {
 	display: inline-block;
 	height: 100%;
-	padding: 0 10px 0 10px;
 	line-height: 30px;
+	padding: 0 10px 0 10px;
 }
 
 .electronbar-top-menu-item-children {
@@ -113,7 +115,7 @@
 
 .electronbar-top-menu-item,
 .electronbar-menu-item {
-	color: #FFFFFF;
+	color: #ffffff;
 }
 
 .electronbar-top-menu-item.open,
@@ -152,8 +154,8 @@
 	height: 1px;
 	margin: 5px 0 5px 0;
 	border: none;
-	background: none;
 	color: #999999;
+	background: none;
 	background-color: #999999;
 }
 
@@ -163,6 +165,7 @@
 	display: flex;
 	flex-direction: row;
 	flex-grow: 0;
+
 	-webkit-app-region: no-drag;
 }
 
@@ -175,7 +178,7 @@
 /* close button */
 
 .electronbar-button-close:hover {
-	background-color: #AA0000;
+	background-color: #cc0000;
 }
 
 .electronbar-button-minimize:hover,
@@ -190,7 +193,7 @@
 	display: flex;
 	align-items: center;
 	height: 100%;
-	color: #CCCCCC;
+	color: #dddddd;
 }
 
 .electronbar-icon > svg {
