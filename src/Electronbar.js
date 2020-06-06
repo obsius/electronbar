@@ -8,13 +8,25 @@ import TitleBar from './Titlebar';
  */
 export default class Electronbar {
 
-	constructor({ electron, window, menu, title, icon, mountNode }) {
+	constructor({ electron, window, menu, icon, mountNode, title }) {
 		
 		this.electron = electron;
 		this.window = window;
-		this.title = title;
 		this.icon = icon;
 		this.mountNode = mountNode;
+
+		// set a title
+		if (title != null) {
+			this.title = title;
+
+		// get the title from the window
+		} else if (window && window.webContents) {
+
+			this.dynamicTitle = true;
+			this.title = window.webContents.getTitle();
+			
+			window.on('page-title-updated', this.onTitleChange);
+		}
 
 		this.setMenu(menu);
 	}
@@ -23,10 +35,18 @@ export default class Electronbar {
 
 		this.unmount();
 
+		if (this.dynamicTitle) {
+			window.removeEventListener('page-title-updated', this.onTitleChange);
+		}
+
 		this.electron = null;
 		this.window	= null;
 		this.mountNode = null;
 	}
+
+	onTitleChange = (e, title) => {
+		this.setTitle(title);
+	};
 
 	render() {
 		if (this.window) {
@@ -69,6 +89,12 @@ export default class Electronbar {
 	}
 
 	setTitle(title) {
+
+		if (this.dynamicTitle) {
+			this.dynamicTitle = false;
+			window.removeEventListener('page-title-updated', this.onTitleChange);
+		}
+
 		this.title = title;
 		this.render();
 	}
