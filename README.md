@@ -2,6 +2,12 @@
 
 Electronbar is a react component and handler for frameless Electron windows that need a browser rendered titlebar and menu. It is completely customizable and renders faster than some of the alternatives.
 
+## Migrations
+
+### Version 1 -> 2
+
+`electron.remote` has been deprecated. Pass the object from `https://github.com/electron/remote` instead.
+
 ## Notes
 
 This package has been made for Windows, although anyone wishing to modify this to match a Linux or Mac look and feel is encouraged to do so and contribute. The source is small, so it should be simple to make any modifications or enhancements.
@@ -60,7 +66,7 @@ import Electronbar from 'electronbar';
 const Electronbar = require('electronbar');
 
 const electronbar = new Electronbar({
-	electron: '<pass the electron reference here>',
+	electron: '<pass the electron remote object here [https://github.com/electron/remote] (for v1, pass the electron object)>',
 	window: '<pass the reference to the electron window here>',
 	menu: '<pass a reference to your menu, not the template, but the Menu.buildFromTemplate() object>',
 	mountNode: '<DOM element container that will hold Electronbar, use document.getElementById() or make a ref in React for this>',
@@ -82,7 +88,7 @@ import Electronbar from 'electronbar';
 import 'electronbar/lib/electronbar.css';
 import './my-electronbar-style-override.css';
 
-const electron = window.require('electron');
+const electronRemote = window.require('@electron/remote'); // for v1: const electron = window.require('electron');
 
 const menuTemplate = [
 	{
@@ -111,9 +117,9 @@ class App extends React.Component {
 
 	componentDidMount() {
 		this.electronbar = new Electronbar({
-			electron: electron,
-			window: electron.remote.getCurrentWindow(),
-			menu: electron.remote.Menu.buildFromTemplate(menuTemplate),
+			electron: electronRemote, // for v1: electron
+			window: electronRemote.getCurrentWindow(), // for v1: electron.remote.getCurrentWindow()
+			menu: electronRemote.Menu.buildFromTemplate(menuTemplate), // for v1: electron.remote.Menu.buildFromTemplate(menuTemplate)
 			mountNode: this.electronbarMount.current,
 			title: 'Hello World',
 			icon: 'public/imgs/favicon.ico'

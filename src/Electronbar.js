@@ -8,9 +8,9 @@ import TitleBar from './Titlebar';
  */
 export default class Electronbar {
 
-	constructor({ electron, window, menu, icon, mountNode, title }) {
+	constructor({ electronRemote, window, menu, icon, mountNode, title }) {
 		
-		this.electron = electron;
+		this.electronRemote = (electronRemote && electronRemote.remote) ? electronRemote.remote : electronRemote;
 		this.window = window;
 		this.icon = icon;
 		this.mountNode = mountNode;
@@ -39,7 +39,7 @@ export default class Electronbar {
 			window.removeEventListener('page-title-updated', this.onTitleChange);
 		}
 
-		this.electron = null;
+		this.electronRemote = null;
 		this.window	= null;
 		this.mountNode = null;
 	}
@@ -69,12 +69,12 @@ export default class Electronbar {
 
 		// set electron menu if an electron built menu was provided
 		if (prebuiltMenu) {
-			this.electron.remote.Menu.setApplicationMenu(menu);
+			this.electronRemote.Menu.setApplicationMenu(menu);
 
 		// hijack the menu to create hidden menu item acceleartors
 		} else {
-			let acceleratorMenu = this.electron.remote.Menu.buildFromTemplate(buildAcceleratorMenuTemplate(menu));
-			this.electron.remote.Menu.setApplicationMenu(acceleratorMenu);
+			let acceleratorMenu = this.electronRemote.Menu.buildFromTemplate(buildAcceleratorMenuTemplate(menu));
+			this.electronRemote.Menu.setApplicationMenu(acceleratorMenu);
 		}
 
 		// the electron menu is fucked up and really slow, make a faster version
