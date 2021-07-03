@@ -77,7 +77,7 @@ export default class Electronbar {
 			this.electronRemote.Menu.setApplicationMenu(acceleratorMenu);
 		}
 
-		// the electron menu is fucked up and really slow, make a faster version
+		// the electron menu is fucked up and really slow, make a faster version (also required for the electron built menu)
 		this.menu = parseMenu(menu);
 
 		this.render();
@@ -129,12 +129,11 @@ Electronbar.buildMenuFromTemplate = (template) => {
 			};
 		}
 
-		return {
-			enabled: true,
-			visible: true,
-			type: template.submenu ? 'submenu' : 'normal',
-			...template
-		};
+		template.enabled = template.enabled || true;
+		template.visible = template.visible || true;
+		template.type = template.type || (template.submenu ? 'submenu' : 'normal');
+
+		return template;
 	}
 };
 
@@ -152,6 +151,7 @@ function parseMenu(menu) {
 		liteMenu.push({
 			accelerator: item.accelerator,
 			click: item.click ? item.click : ()=>{},
+			checked: item.checked,
 			enabled: item.enabled,
 			label: item.label,
 			role: item.role,

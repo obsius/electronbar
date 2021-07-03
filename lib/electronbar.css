@@ -82,6 +82,16 @@
 	white-space: nowrap;
 }
 
+.electronbar-menu-item-checkbox {
+	display: inline;
+	text-align: left;
+	width: 16px;
+}
+
+.electronbar-menu-item-checkbox-active::before {
+	content: '✓';
+}
+
 .electronbar-menu-item-label {
 	display: flex;
 	flex-direction: row;
@@ -91,6 +101,7 @@
 }
 
 .electronbar-menu-item-label-text {
+	flex: 1 1;
 	display: inline;
 	text-align: left;
 }
@@ -100,6 +111,7 @@
 }
 
 .electronbar-menu-item-label-accelerator {
+	flex: 0 0;
 	display: inline;
 	text-align: right;
 	font-size: 12px;

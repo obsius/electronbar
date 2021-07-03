@@ -7,6 +7,7 @@ export default {
 	],
 	input: 'src/Electronbar.js',
 	output: {
+		exports: 'auto',
 		file: 'lib/index.js',
 		format: 'cjs'
 	},

@@ -194,9 +194,12 @@ export default class MenuItem extends React.Component {
 				<Accelerator accelerator={item.accelerator} />
 			);
 
+			let checkedClassName = 'electronbar-menu-item-checkbox' +  (item.checked ? ' electronbar-menu-item-checkbox-active' : '');
+
 			return (
 				<div className={ ['electronbar-menu-item',  ...classes].join(' ') } onMouseEnter={this.handleHover} onMouseLeave={this.handleAntiHover}>
 					<div className="electronbar-menu-item-label" onClick={this.handleClick}>
+						<div className={checkedClassName} />
 						<div className="electronbar-menu-item-label-text">
 							{ translateRole(item) }
 						</div>
