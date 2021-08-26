@@ -12,23 +12,36 @@ export default class Menu extends React.Component {
 	};
 
 	constructor(props) {
+
 		super(props);
-		window.addEventListener('click', this.handleWindowClick, false);
+
+		this.ref = React.createRef();
+
+		window.addEventListener('click', this.handleWindowClick, true);
+		window.addEventListener('contextmenu', this.handleWindowClick, true);
 	}
 
 	componentWillUnmount() {
-		window.removeEventListener('click', this.handleWindowClick);
+		window.removeEventListener('click', this.handleWindowClick, true);
+		window.removeEventListener('contextmenu', this.handleWindowClick, true);
 	}
 
 	close() {
-		this.setState({
-			selectedItemKey: null
-		});
+
+		if (this.state.selectedItemKey != null) {
+			this.setState({
+				selectedItemKey: null
+			});
+		}
+
+		if (this.props.onClose) {
+			this.props.onClose();
+		}
 	}
 
-	handleWindowClick = () => {
+	handleClose = () => {
 		this.close();
-	}
+	};
 
 	handleItemClick = (key) => {
 		this.setState({
@@ -44,34 +57,46 @@ export default class Menu extends React.Component {
 		}
 	};
 
+	handleWindowClick = (e) => {
+		if (!e.path.includes(this.ref.current)) {
+			this.close();
+		}
+	};
+
 	render() {
 
-		let menu = this.props.menu;
+		let { context, menu, x, y } = this.props;
 
 		let items = [];
-		
+
 		for (let i = 0; i < menu.length; ++i) {
 			if (menu[i].visible) {
 				items.push(
 					<MenuItem
 						key={i}
 						iKey={i}
-						depth={0}
+						depth={context ? 1 : 0}
 						item={menu[i]}
 						open={i == this.state.selectedItemKey}
 						onClick={this.handleItemClick}
 						onHover={this.handleItemHover}
-						close={ () => this.close() }
+						onClose={this.handleClose}
 					/>
 				);
 			}
 		}
 
+		let className = context ? 'electronbar-context-menu' : 'electronbar-menu';
+
+		let style = context && {
+			left: x,
+			top: y
+		};
+
 		return (
-			<div className="electronbar-menu">
+			<div ref={this.ref} className={className} style={style}>
 				{ items }
 			</div>
 		);
 	}
-
 }

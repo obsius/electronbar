@@ -11,14 +11,15 @@ export default class Buttons extends React.Component {
 	};
 
 	constructor(props) {
+
 		super(props);
 
-		this.window = props.window;
-		this.state.maximized = this.window.isMaximized();
-		this.state.fullScreen = this.window.isFullScreen();
+		this.browserWindow = props.browserWindow;
+		this.state.maximized = this.browserWindow.isMaximized();
+		this.state.fullScreen = this.browserWindow.isFullScreen();
 
 		['enter-full-screen', 'leave-full-screen', 'maximize', 'unmaximize'].forEach((event) => {
-			this.window.on(event, this.onWindowChange);
+			this.browserWindow.on(event, this.onWindowChange);
 		});
 
 		window.addEventListener('beforeunload', this.destroy);
@@ -31,7 +32,7 @@ export default class Buttons extends React.Component {
 	destroy = () => {
 
 		['enter-full-screen', 'leave-full-screen', 'maximize', 'unmaximize'].forEach((event) => {
-			this.window.removeListener(event, this.onWindowChange);
+			this.browserWindow.removeListener(event, this.onWindowChange);
 		});
 
 		if (window) {
@@ -41,29 +42,29 @@ export default class Buttons extends React.Component {
 
 	onWindowChange = () => {
 		this.setState({
-			maximized: this.window.isMaximized(),
-			fullScreen: this.window.isFullScreen()
+			maximized: this.browserWindow.isMaximized(),
+			fullScreen: this.browserWindow.isFullScreen()
 		});
 	};
 
 	handleUnFullscreenClick = () => {
-		this.window.setFullScreen(false);
+		this.browserWindow.setFullScreen(false);
 	};
 
 	handleMinimizeClick = () => {
-		this.window.minimize();
+		this.browserWindow.minimize();
 	};
 
 	handleMaximizeClick = () => {
-		if (this.window.isMaximized()) {
-			this.window.unmaximize();
+		if (this.browserWindow.isMaximized()) {
+			this.browserWindow.unmaximize();
 		} else {
-			this.window.maximize();
+			this.browserWindow.maximize();
 		}
 	};
 
 	handleCloseClick = () => {
-		this.window.close();
+		this.browserWindow.close();
 	};
 
 	render() {

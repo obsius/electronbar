@@ -1,6 +1,7 @@
 import React from 'react';
 import reactDom from 'react-dom';
 
+import Menu from './Menu';
 import TitleBar from './Titlebar';
 
 /** 
@@ -8,10 +9,13 @@ import TitleBar from './Titlebar';
  */
 export default class Electronbar {
 
-	constructor({ electronRemote, window, menu, icon, mountNode, title }) {
-		
+	contextMenu;
+	contextMenuEvent;
+
+	constructor({ electronRemote, browserWindow, menu, icon, mountNode, title }) {
+
 		this.electronRemote = (electronRemote && electronRemote.remote) ? electronRemote.remote : electronRemote;
-		this.window = window;
+		this.browserWindow = browserWindow;
 		this.icon = icon;
 		this.mountNode = mountNode;
 
@@ -20,12 +24,12 @@ export default class Electronbar {
 			this.title = title;
 
 		// get the title from the window
-		} else if (window && window.webContents) {
+		} else if (browserWindow && browserWindow.webContents) {
 
 			this.dynamicTitle = true;
-			this.title = window.webContents.getTitle();
+			this.title = browserWindow.webContents.getTitle();
 			
-			window.on('page-title-updated', this.onTitleChange);
+			browserWindow.on('page-title-updated', this.onTitleChange);
 		}
 
 		this.setMenu(menu);
@@ -36,7 +40,7 @@ export default class Electronbar {
 		this.unmount();
 
 		if (this.dynamicTitle) {
-			window.removeEventListener('page-title-updated', this.onTitleChange);
+			this.browserWindow.removeEventListener('page-title-updated', this.onTitleChange);
 		}
 
 		this.electronRemote = null;
@@ -48,15 +52,37 @@ export default class Electronbar {
 		this.setTitle(title);
 	};
 
+	onContextMenuClose = () => {
+
+		this.contextMenu = null;
+		this.contextMenuEvent = null;
+
+		this.render();
+	};
+
 	render() {
-		if (this.window) {
+		if (this.mountNode && this.browserWindow) {
+
+			let contextMenu = (this.contextMenu && this.contextMenuEvent) && (
+				<Menu
+					context
+					menu={this.contextMenu}
+					x={this.contextMenuEvent.clientX}
+					y={this.contextMenuEvent.clientY}
+					onClose={this.onContextMenuClose}
+				/>
+			);
+
 			reactDom.render(
-				<TitleBar
-					menu={this.menu}
-					title={this.title}
-					icon={this.icon}
-					window={this.window}
-				/>,
+				<React.Fragment>
+					<TitleBar
+						menu={this.menu}
+						title={this.title}
+						icon={this.icon}
+						browserWindow={this.browserWindow}
+					/>
+					{ contextMenu }
+				</React.Fragment>,
 				this.mountNode
 			);
 		}
@@ -88,19 +114,35 @@ export default class Electronbar {
 		this.render();
 	}
 
+	setContextMenu(event, menu) {
+
+		this.contextMenuEvent = event;
+		this.contextMenu = menu;
+
+		this.render();
+	}
+
 	setTitle(title) {
 
 		if (this.dynamicTitle) {
 			this.dynamicTitle = false;
-			window.removeEventListener('page-title-updated', this.onTitleChange);
+			this.browserWindow.removeEventListener('page-title-updated', this.onTitleChange);
 		}
 
 		this.title = title;
 		this.render();
 	}
 
+	mount(mountNode) {
+		this.unmount();
+		this.mountNode = mountNode;
+	}
+
 	unmount() {
-		reactDom.unmountComponentAtNode(this.mountNode);
+		if (this.mountNode) {
+			reactDom.unmountComponentAtNode(this.mountNode);
+			this.mountNode = null;
+		}
 	}
 }
 

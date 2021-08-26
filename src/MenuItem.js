@@ -43,15 +43,12 @@ export default class MenuItem extends React.Component {
 		selectedItemKey: null
 	};
 
-	constructor(props) {
-		super(props);
-	}
-
 	componentWillUnmount() {
 		this.clearHoverTimeout();
 	}
 
 	handleAntiHover = () => {
+
 		this.clearHoverTimeout();
 
 		this.hoverTimer = setTimeout(() => {
@@ -64,6 +61,7 @@ export default class MenuItem extends React.Component {
 	};
 
 	handleClick = (e) => {
+
 		e.stopPropagation();
 
 		if (!this.props.item.enabled) { return; }
@@ -80,6 +78,10 @@ export default class MenuItem extends React.Component {
 		}
 	};
 
+	handleClose = () => {
+		this.close();
+	};
+
 	handleHover = (e) => {
 		e.stopPropagation();
 		if (this.props.item.enabled && this.props.onHover) { this.props.onHover(this.props.iKey); }
@@ -93,6 +95,7 @@ export default class MenuItem extends React.Component {
 	};
 
 	handleItemHover = (key) => {
+
 		this.clearHoverTimeout();
 
 		if (this.state.selectedItemKey != key) {
@@ -108,13 +111,18 @@ export default class MenuItem extends React.Component {
 	};
 
 	close = () => {
+
 		this.clearHoverTimeout();
-		
-		this.setState({
-			selectedItemKey: null
-		});
-		
-		if (this.props.close) { this.props.close(); }
+
+		if (this.selectedItemKey != null) {
+			this.setState({
+				selectedItemKey: null
+			});
+		}
+
+		if (this.props.onClose) {
+			this.props.onClose();
+		}
 	};
 
 	clearHoverTimeout() {
@@ -126,9 +134,8 @@ export default class MenuItem extends React.Component {
 
 	render() {
 
-		let item = this.props.item;
-		let open = this.props.open;
-		let depth = this.props.depth;
+		let { item, open, depth } = this.props;
+
 		let hasChildren = item.submenu && item.submenu.length;
 		let enabled = item.enabled;
 
@@ -153,7 +160,7 @@ export default class MenuItem extends React.Component {
 							open={i == this.state.selectedItemKey}
 							onClick={this.handleItemClick}
 							onHover={this.handleItemHover}
-							close={this.close}
+							onClose={this.handleClose}
 						/>
 					);
 				}
