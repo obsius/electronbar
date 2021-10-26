@@ -52,6 +52,7 @@ export default class MenuItem extends React.Component {
 		this.clearHoverTimeout();
 
 		this.hoverTimer = setTimeout(() => {
+
 			this.hoverTimer = null;
 
 			this.setState({
@@ -83,7 +84,11 @@ export default class MenuItem extends React.Component {
 	};
 
 	handleHover = (e) => {
+
 		e.stopPropagation();
+
+		this.clearHoverTimeout();
+		
 		if (this.props.item.enabled && this.props.onHover) { this.props.onHover(this.props.iKey); }
 	};
 
@@ -110,11 +115,11 @@ export default class MenuItem extends React.Component {
 		}
 	};
 
-	close = () => {
+	close() {
 
 		this.clearHoverTimeout();
 
-		if (this.selectedItemKey != null) {
+		if (this.state.selectedItemKey != null) {
 			this.setState({
 				selectedItemKey: null
 			});
