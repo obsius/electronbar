@@ -3,7 +3,7 @@ import babel from 'rollup-plugin-babel';
 export default {
 	external: [
 		'react',
-		'react-dom'
+		'react-dom/client'
 	],
 	input: 'src/Electronbar.js',
 	output: {

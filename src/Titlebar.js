@@ -7,6 +7,11 @@ import Buttons from './Buttons';
  * The main react component.
  */
 export default class TitleBar extends React.Component {
+
+	shouldComponentUpdate(nextProps) {
+		return nextProps.needsUpdate;
+	}
+
 	render() {
 		return (
 			<div className="electronbar">

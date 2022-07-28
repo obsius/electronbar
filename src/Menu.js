@@ -69,20 +69,29 @@ export default class Menu extends React.Component {
 
 		let items = [];
 
-		for (let i = 0; i < menu.length; ++i) {
-			if (menu[i].visible) {
-				items.push(
-					<MenuItem
-						key={i}
-						iKey={i}
-						depth={context ? 1 : 0}
-						item={menu[i]}
-						open={i == this.state.selectedItemKey}
-						onClick={this.handleItemClick}
-						onHover={this.handleItemHover}
-						onClose={this.handleClose}
-					/>
-				);
+		// context menu
+		if (context) {
+			items.push(
+				<MenuItem open item={menu} onClose={this.handleClose} />
+			);
+
+		// top-level menu
+		} else {
+			for (let i = 0; i < menu.length; ++i) {
+				if (menu[i].visible) {
+					items.push(
+						<MenuItem
+							key={i}
+							iKey={i}
+							depth={context ? 1 : 0}
+							item={menu[i]}
+							open={i == this.state.selectedItemKey}
+							onClick={this.handleItemClick}
+							onHover={this.handleItemHover}
+							onClose={this.handleClose}
+						/>
+					);
+				}
 			}
 		}
 

@@ -37,28 +37,88 @@ const roleMap = {
  */
 export default class MenuItem extends React.Component {
 
+	// use a timer for auto closing, but keep open if a child has been hovered open (indicated by antiHoverDisabled)
 	hoverTimer = null;
+	antiHoverDisabled = false;
 
 	state = {
 		selectedItemKey: null
 	};
 
+	constructor(props) {
+		super(props);
+		this.ref = React.createRef();
+	}
+
+	componentDidUpdate() {
+
+		// reset state without render
+		if (!this.props.open) {
+			this.state.selectedItemKey = null;
+			this.antiHoverDisabled = false;
+		}
+
+		// check if offscreen
+		if (this.ref.current) {
+
+			let bounds = this.ref.current.getBoundingClientRect();
+
+			let maxX = bounds.x + bounds.width;
+
+			if (maxX > window.innerWidth) {
+
+				// top level
+				if (this.ref.current.classList.contains('electronbar-top-menu-item-children')) {
+					this.ref.current.style.left = `${Math.floor(window.innerWidth - maxX - 1)}px`;
+
+				// submenu
+				} else {
+					this.ref.current.style.left = `calc(100% + ${Math.floor(10 + window.innerWidth - maxX - 1)}px)`;
+				}
+			}
+		}
+	}
+
 	componentWillUnmount() {
 		this.clearHoverTimeout();
+	}
+
+	clearHoverTimeout() {
+		if (this.hoverTimer) {
+			clearTimeout(this.hoverTimer);
+			this.hoverTimer = null;
+		}
+	}
+
+	close() {
+
+		this.clearHoverTimeout();
+
+		if (this.state.selectedItemKey != null) {
+			this.setState({
+				selectedItemKey: null
+			});
+		}
+
+		if (this.props.onClose) {
+			this.props.onClose();
+		}
 	}
 
 	handleAntiHover = () => {
 
 		this.clearHoverTimeout();
 
-		this.hoverTimer = setTimeout(() => {
+		if (!this.antiHoverDisabled) {
+			this.hoverTimer = setTimeout(() => {
 
-			this.hoverTimer = null;
+				this.hoverTimer = null;
 
-			this.setState({
-				selectedItemKey: null
-			});
-		}, HOVER_TIMEOUT);
+				this.setState({
+					selectedItemKey: null
+				});
+			}, HOVER_TIMEOUT);
+		}
 	};
 
 	handleClick = (e) => {
@@ -89,7 +149,7 @@ export default class MenuItem extends React.Component {
 
 		this.clearHoverTimeout();
 		
-		if (this.props.item.enabled && this.props.onHover) { this.props.onHover(this.props.iKey); }
+		if (this.props.item.enabled && this.props.onHover) { this.props.onHover(this.props.iKey, 1); }
 	};
 
 	handleItemClick = (key) => {
@@ -99,9 +159,12 @@ export default class MenuItem extends React.Component {
 		});
 	};
 
-	handleItemHover = (key) => {
+	handleItemHover = (key, relativeDepth = 0) => {
 
 		this.clearHoverTimeout();
+
+		// disable menu closing if a child has been hovered over
+		this.antiHoverDisabled = relativeDepth > 1;
 
 		if (this.state.selectedItemKey != key) {
 			this.hoverTimer = setTimeout(() => {
@@ -113,35 +176,19 @@ export default class MenuItem extends React.Component {
 				});
 			}, HOVER_TIMEOUT);
 		}
+
+		// forward up the chain
+		if (this.props.item.enabled && this.props.onHover) { this.props.onHover(this.props.iKey, relativeDepth + 1); }
 	};
-
-	close() {
-
-		this.clearHoverTimeout();
-
-		if (this.state.selectedItemKey != null) {
-			this.setState({
-				selectedItemKey: null
-			});
-		}
-
-		if (this.props.onClose) {
-			this.props.onClose();
-		}
-	};
-
-	clearHoverTimeout() {
-		if (this.hoverTimer) {
-			clearTimeout(this.hoverTimer);
-			this.hoverTimer = null;
-		}
-	}
 
 	render() {
 
-		let { item, open, depth } = this.props;
+		let { item, open, depth = 0 } = this.props;
 
-		let hasChildren = item.submenu && item.submenu.length;
+		let hoisted = Array.isArray(item);
+		let children = hoisted ? item : item.submenu;
+
+		let hasChildren = children && children.length;
 		let enabled = item.enabled;
 
 		let disabledCount = 0;
@@ -153,15 +200,15 @@ export default class MenuItem extends React.Component {
 			let items = [];
 
 			// iterate through submenu
-			for (let i = 0; i < item.submenu.length; ++i) {
+			for (let i = 0; i < children.length; ++i) {
 
-				if (item.submenu[i].visible) {
+				if (children[i].visible) {
 					items.push(
 						<MenuItem
 							key={i}
 							iKey={i}
 							depth={depth + 1}
-							item={item.submenu[i]}
+							item={children[i]}
 							open={i == this.state.selectedItemKey}
 							onClick={this.handleItemClick}
 							onHover={this.handleItemHover}
@@ -170,67 +217,88 @@ export default class MenuItem extends React.Component {
 					);
 				}
 				
-				if (item.submenu[i].type == 'separator' || !item.submenu[i].enabled) {
+				if (children[i].type == 'separator' || !children[i].enabled) {
 					disabledCount++;
 				}
 			}
 
-			if (open && enabled && items.length && disabledCount < item.submenu.length) {
-				itemContainer = <div className={ depth ? 'electronbar-menu-item-children' : 'electronbar-top-menu-item-children' }>{items}</div>;
+			// forward items to parent container
+			if (hoisted) {
+				itemContainer = items;
+
+			// check it top level
+			} else if (open && enabled && items.length && disabledCount < children.length) {
+				itemContainer = (
+					<div ref={this.ref} style={{ zIndex: 1000 + depth }} className={ depth ? 'electronbar-menu-item-children' : 'electronbar-top-menu-item-children' }>
+						{ items }
+					</div>
+				);
 			}
 		}
 
-		// set disabled if all of this menu item's children are disabled (separators don't count as active or enabled)
-		if (hasChildren && disabledCount == item.submenu.length) {
-			enabled = false;
-		}
-
-		// set the dynamic CSS classes
-		if (enabled && hasChildren && open) { classes.push('open'); }
-		if (!enabled) { classes.push('disabled'); }
-
-		// render a separator
-		if (item.type == 'separator') {
+		// top level context menu
+		if (hoisted) {
 			return (
-				<div className="electronbar-seperator" onClick={this.handleClick}>
-					<hr />
+				<div ref={this.ref} className="electronbar-context-menu-children" onMouseLeave={this.handleAntiHover}>
+					{ itemContainer }
 				</div>
 			);
 
-		// render a branch item
-		} else if (depth) {
+		// menu item
+		} else {
 
-			let expandOrAccelerator = hasChildren ? (
-				<Expander />
-			) : (
-				<Accelerator accelerator={item.accelerator} />
-			);
+			// set disabled if all of this menu item's children are disabled (separators don't count as active or enabled)
+			if (hasChildren && disabledCount == item.submenu.length) {
+				enabled = false;
+			}
 
-			let checkedClassName = 'electronbar-menu-item-checkbox' +  (item.checked ? ' electronbar-menu-item-checkbox-active' : '');
+			// set the dynamic CSS classes
+			if (enabled && hasChildren && open) { classes.push('open'); }
+			if (!enabled) { classes.push('disabled'); }
 
-			return (
-				<div className={ ['electronbar-menu-item',  ...classes].join(' ') } onMouseEnter={this.handleHover} onMouseLeave={this.handleAntiHover}>
-					<div className="electronbar-menu-item-label" onClick={this.handleClick}>
-						<div className={checkedClassName} />
-						<div className="electronbar-menu-item-label-text">
+			// render a separator
+			if (item.type == 'separator') {
+				return (
+					<div className="electronbar-seperator" onClick={this.handleClick}>
+						<hr />
+					</div>
+				);
+
+			// render a branch item
+			} else if (depth) {
+
+				let expandOrAccelerator = hasChildren ? (
+					<Expander />
+				) : (
+					<Accelerator accelerator={item.accelerator} />
+				);
+
+				let checkedClassName = 'electronbar-menu-item-checkbox' +  (item.checked ? ' electronbar-menu-item-checkbox-active' : '');
+
+				return (
+					<div className={ ['electronbar-menu-item',  ...classes].join(' ') } onMouseEnter={this.handleHover} onMouseLeave={this.handleAntiHover}>
+						<div className="electronbar-menu-item-label" onClick={this.handleClick}>
+							<div className={checkedClassName} />
+							<div className="electronbar-menu-item-label-text">
+								{ translateRole(item) }
+							</div>
+							{ expandOrAccelerator }
+						</div>
+						{ itemContainer }
+					</div>
+				);
+
+			// render a root item
+			} else {
+				return (
+					<div className={ ['electronbar-top-menu-item', ...classes].join(' ') } onMouseEnter={this.handleHover} onMouseLeave={this.handleAntiHover}>
+						<div className="electronbar-top-menu-item-label" onClick={this.handleClick}>
 							{ translateRole(item) }
 						</div>
-						{expandOrAccelerator}
+						{ itemContainer }
 					</div>
-					{itemContainer}
-				</div>
-			);
-
-		// render a root item
-		} else {
-			return (
-				<div className={ ['electronbar-top-menu-item', ...classes].join(' ') } onMouseEnter={this.handleHover} onMouseLeave={this.handleAntiHover}>
-					<div className="electronbar-top-menu-item-label" onClick={this.handleClick}>
-						{ translateRole(item) }
-					</div>
-					{itemContainer}
-				</div>
-			);
+				);
+			}
 		}
 	}
 }

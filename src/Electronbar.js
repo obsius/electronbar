@@ -1,5 +1,5 @@
 import React from 'react';
-import reactDom from 'react-dom';
+import ReactDomClient from 'react-dom/client';
 
 import Menu from './Menu';
 import TitleBar from './Titlebar';
@@ -17,7 +17,6 @@ export default class Electronbar {
 		this.electronRemote = (electronRemote && electronRemote.remote) ? electronRemote.remote : electronRemote;
 		this.browserWindow = browserWindow;
 		this.icon = icon;
-		this.mountNode = mountNode;
 
 		// set a title
 		if (title != null) {
@@ -33,6 +32,7 @@ export default class Electronbar {
 		}
 
 		this.setMenu(menu);
+		this.mount(mountNode);
 	}
 
 	destroy() {
@@ -45,7 +45,6 @@ export default class Electronbar {
 
 		this.electronRemote = null;
 		this.window	= null;
-		this.mountNode = null;
 	}
 
 	onTitleChange = (e, title) => {
@@ -60,7 +59,7 @@ export default class Electronbar {
 		this.render();
 	};
 
-	render() {
+	render(titleBarNeedsUpdate = false) {
 		if (this.mountNode && this.browserWindow) {
 
 			let contextMenu = (this.contextMenu && this.contextMenuEvent) && (
@@ -73,17 +72,17 @@ export default class Electronbar {
 				/>
 			);
 
-			reactDom.render(
+			this.mountNode.render(
 				<React.Fragment>
 					<TitleBar
+						needsUpdate={titleBarNeedsUpdate}
 						menu={this.menu}
 						title={this.title}
 						icon={this.icon}
 						browserWindow={this.browserWindow}
 					/>
 					{ contextMenu }
-				</React.Fragment>,
-				this.mountNode
+				</React.Fragment>
 			);
 		}
 	}
@@ -106,12 +105,12 @@ export default class Electronbar {
 		// the electron menu is fucked up and really slow, make a faster version (also required for the electron built menu)
 		this.menu = parseMenu(menu);
 
-		this.render();
+		this.render(true);
 	}
 
 	setIcon(icon) {
 		this.icon = icon;
-		this.render();
+		this.render(true);
 	}
 
 	setContextMenu(event, menu) {
@@ -130,17 +129,19 @@ export default class Electronbar {
 		}
 
 		this.title = title;
-		this.render();
+		this.render(true);
 	}
 
 	mount(mountNode) {
-		this.unmount();
-		this.mountNode = mountNode;
+		if (mountNode) {
+			this.unmount();
+			this.mountNode = ReactDomClient.createRoot(mountNode);
+		}
 	}
 
 	unmount() {
 		if (this.mountNode) {
-			reactDom.unmountComponentAtNode(this.mountNode);
+			this.mountNode.unmount()
 			this.mountNode = null;
 		}
 	}
