@@ -66,15 +66,7 @@ export default class MenuItem extends React.Component {
 			let maxX = bounds.x + bounds.width;
 
 			if (maxX > window.innerWidth) {
-
-				// top level
-				if (this.ref.current.classList.contains('electronbar-top-menu-item-children')) {
-					this.ref.current.style.left = `${Math.floor(window.innerWidth - maxX - 1)}px`;
-
-				// submenu
-				} else {
-					this.ref.current.style.left = `calc(100% + ${Math.floor(10 + window.innerWidth - maxX - 1)}px)`;
-				}
+				this.ref.current.style.left = `-${bounds.width + 10}px`;
 			}
 		}
 	}
