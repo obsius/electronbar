@@ -26,6 +26,21 @@ export default class Menu extends React.Component {
 		window.removeEventListener('contextmenu', this.handleWindowClick, true);
 	}
 
+	componentDidMount() {
+
+		// check if offscreen
+		if (this.props.context && this.ref.current) {
+
+			let bounds = this.ref.current.getBoundingClientRect();
+
+			let maxX = bounds.x + bounds.width;
+
+			if (maxX > window.innerWidth) {
+				this.ref.current.style.left = `${window.innerWidth - (bounds.width + 10)}px`;
+			}
+		}
+	}
+
 	close() {
 
 		if (this.state.selectedItemKey != null) {
