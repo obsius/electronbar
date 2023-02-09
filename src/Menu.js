@@ -73,7 +73,7 @@ export default class Menu extends React.Component {
 	};
 
 	handleWindowClick = (e) => {
-		if (!e.path.includes(this.ref.current)) {
+		if (!e.composedPath().includes(this.ref.current)) {
 			this.close();
 		}
 	};
