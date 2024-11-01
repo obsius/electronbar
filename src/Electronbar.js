@@ -12,15 +12,21 @@ export default class Electronbar {
 	contextMenu;
 	contextMenuEvent;
 
-	constructor({ electronRemote, browserWindow, menu, icon, mountNode, title }) {
+	constructor({ electronRemote, browserWindow, menu, icon, mountNode, title, controlElectronTitle = false }) {
 
 		this.electronRemote = (electronRemote && electronRemote.remote) ? electronRemote.remote : electronRemote;
 		this.browserWindow = browserWindow;
 		this.icon = icon;
+		this.controlElectronTitle = browserWindow && controlElectronTitle;
 
 		// set a title
 		if (title != null) {
+
 			this.title = title;
+
+			if (this.controlElectronTitle) {
+				this.browserWindow.setTitle(title);
+			}
 
 		// get the title from the window
 		} else if (browserWindow && browserWindow.webContents) {
@@ -126,6 +132,10 @@ export default class Electronbar {
 		if (this.dynamicTitle) {
 			this.dynamicTitle = false;
 			this.browserWindow.removeEventListener('page-title-updated', this.onTitleChange);
+		}
+
+		if (this.controlElectronTitle) {
+			this.browserWindow.setTitle(title);
 		}
 
 		this.title = title;

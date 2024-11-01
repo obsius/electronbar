@@ -1,6 +1,6 @@
 {
 	"name": "electronbar",
-	"version": "2.3.4",
+	"version": "2.3.5",
 	"description": "A react title bar component and handler for Electron.",
 	"homepage": "https://github.com/obsius/electronbar",
 	"author": "Jeff Seaman <mr.jeffrey.seaman@gmail.com> (https://www.ngc6822.com)",
@@ -10,13 +10,13 @@
 		"prepare": "rollup --bundleConfigAsCjs -c && copyfiles -u 1 css/* lib"
 	},
 	"devDependencies": {
-		"@babel/core": "^7.24.9",
+		"@babel/core": "^7.26.0",
 		"@babel/plugin-proposal-class-properties": "^7.18.6",
-		"@babel/plugin-transform-react-jsx": "^7.24.7",
-		"@babel/preset-env": "^7.24.8",
+		"@babel/plugin-transform-react-jsx": "^7.25.9",
+		"@babel/preset-env": "^7.26.0",
 		"@rollup/plugin-babel": "^6.0.4",
 		"copyfiles": "^2.4.1",
-		"rollup": "^4.19.0"
+		"rollup": "^4.24.3"
 	},
 	"dependencies": {
 		"react": "^18.3.1",
